@@ -2,7 +2,7 @@ import React from 'react';
 
 import './global.css';
 
-import Logon from './pages/Logon'
+import Routes from './routes';
 
 /**
  * React - conceitos
@@ -16,7 +16,7 @@ import Logon from './pages/Logon'
 
 function App() {
   return (
-    <Logon />
+    <Routes />
   );
 }
 
