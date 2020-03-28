@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import Header from './Header'
+import './global.css';
+
+import Logon from './pages/Logon'
 
 /**
  * React - conceitos
@@ -13,18 +15,8 @@ import Header from './Header'
  */
 
 function App() {
-  // useState() retorna um array com duas posições: Array [valor, função_de_atualização]
-  const [counter, setCounter] = useState(0);
-
-  function increment() {
-    setCounter(counter + 1);
-  }
-
   return (
-    <div>
-      <Header>Contador: {counter}</Header>
-      <button onClick={increment}>Incrementar</button>
-    </div>
+    <Logon />
   );
 }
 
