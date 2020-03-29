@@ -1,11 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
+import Routes from './src/routes';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello OmniStack</Text>
-    </View>
+    <Routes />
   );
 }
 
@@ -25,16 +24,3 @@ export default function App() {
  * 
  * Heranças de estilo: Não existem heranças de estilo no React Native. O estilo deve ser aplicado diretamente no elemento.
  */
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#7159C1',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    color: '#FFF',
-    fontSize: 20,
-  }
-});
