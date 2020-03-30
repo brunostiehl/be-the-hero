@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 
 // Importa todas as funções do pacote e atribui na variável MailComposer
@@ -12,7 +12,12 @@ import styles from './styles';
 
 export default function Detail() {
     const navigation = useNavigation();
-    const message = 'Olá APAD estou entrando em contato pois gostaria de ajudar no caso "Cadelinha atropelada" no valor de R$120,00';
+
+    // Serve para acessar informações específicas da página atual da aplicação
+    const route = useRoute();
+
+    const incident = route.params.incident;
+    const message = `Olá ${incident.name} estou entrando em contato pois gostaria de ajudar no caso "${incident.title}" no valor de ${Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'}).format(incident.value)}`;
 
     // Retorna para página anterior
     function navigateBack() {
@@ -22,15 +27,15 @@ export default function Detail() {
     // Envia o e-mail para ONG
     function sendMail() {
         MailComposer.composeAsync({
-            subject: 'Herói do caso: Cadelinha atropelada',
-            recipients: ['brunostiehl@hotmail.com'],
+            subject: `Herói do caso: ${incident.title}`,
+            recipients: [incident.email],
             body: message,
         });
     }
 
     // Abre o whatsapp para contactar a ONG
     function sendWhatsapp() {
-        Linking.openURL(`whatsapp://send?phone=5551996768685&text=${message}`);
+        Linking.openURL(`whatsapp://send?phone=${incident.whatsapp}&text=${message}`);
     }
 
     return (
@@ -45,13 +50,18 @@ export default function Detail() {
 
             <View style={styles.incident}>
                 <Text style={[styles.incidentProperty, { marginTop: 0 }]}>ONG:</Text>
-                <Text style={styles.incidentValue}>APAD</Text>
+                <Text style={styles.incidentValue}>{incident.name} de {incident.city}/{incident.uf}</Text>
 
                 <Text style={styles.incidentProperty}>CASO:</Text>
-                <Text style={styles.incidentValue}>Cadelinha atropelada</Text>
+                <Text style={styles.incidentValue}>{incident.title}</Text>
 
                 <Text style={styles.incidentProperty}>Valor:</Text>
-                <Text style={styles.incidentValue}>R$ 120,00</Text>
+                <Text style={styles.incidentValue}>
+                    {Intl.NumberFormat('pt-BR', { 
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(incident.value)}
+                </Text>
             </View>
 
             <View style={styles.contactBox}>
