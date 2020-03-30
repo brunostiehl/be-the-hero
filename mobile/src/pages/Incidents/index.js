@@ -16,6 +16,9 @@ export default function Incidents() {
     const [incidents, setIncidents] = useState([]);
     const [total, setTotal] = useState(0);
 
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+
     const navigation = useNavigation();
 
     function navigateToDetail(incident) {
@@ -23,10 +26,32 @@ export default function Incidents() {
     }
 
     async function loadIncidents() {
-        const response = await api.get('/incidents');
+        // Para evitar que outra requisição comece enquanto outra está sendo executada
+        if (loading) {
+            return;
+        }
 
-        setIncidents(response.data);
+        // Para que não dispare novas requisições depois que todas as informações já tiverem sido mostradas em tela
+        if (total > 0 && incidents.length === total) {
+            return;
+        }
+
+        setLoading(true);
+
+        // Para enviar o número da página que está sendo carregada como parâmetro
+        const response = await api.get('/incidents', {
+            params: { page }
+        });
+
+        // Para enviar o número da página que está sendo carregada pela URL
+        // const response = await api.get(`incidents?page=${page}`);
+
+        // Para anexar dois vetores dentro de um único vetor no React
+        setIncidents([ ... incidents, ... response.data ]);
+
         setTotal(response.headers['x-total-count']);
+        setPage(page + 1);
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -50,6 +75,8 @@ export default function Incidents() {
                 style={styles.incidentList}
                 keyExtractor={incident => String(incident.id)}
                 showsVerticalScrollIndicator={false}
+                onEndReached={loadIncidents}
+                onEndReachedThreshold={0.2}
                 renderItem={({ item : incident }) => (
                     <View style={styles.incident}>
                         <Text style={styles.incidentProperty}>ONG:</Text>
